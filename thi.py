@@ -1,10 +1,15 @@
 # print a tree
+from string import Template
+from email.message import EmailMessage
+import smtplib
+import ssl
 import glob
 import os
 import random
 import re
 import sys
 from time import time
+from pathlib import Path
 
 import img2pdf
 from PIL import Image, UnidentifiedImageError
@@ -593,3 +598,30 @@ def check_security_password(password: str):
 
 
 # check_security_password('AiYeuToiKhong1234')
+
+
+# Send email
+# print(help(Template))
+html = Path('index.html').read_text(encoding=None, errors=None)
+html_template = Template(html)
+smtp_server = 'smtp.gmail.com'
+port = '587'
+msg = EmailMessage()
+sender_email = 'nnthibk1234@gmail.com'
+password = 'aygkzrvjssphtluc'
+context = ssl.create_default_context()
+msg['Subject'] = 'Hello, my name is Thi'
+msg['from'] = 'nnthibk1234@gmail.com'
+msg['to'] = 'onhanam1234@gmail.com'
+msg.set_content(html_template.substitute({'name': 'your bastard'}), 'html')
+try:
+    with smtplib.SMTP(smtp_server, port) as server_email:
+        server_email.ehlo()
+        server_email.starttls(context=context)
+        server_email.ehlo()
+        server_email.login(sender_email, password)
+        server_email.send_message(msg)
+except Exception as err:
+    print(err)
+finally:
+    server_email.close()
